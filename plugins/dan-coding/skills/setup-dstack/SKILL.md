@@ -52,12 +52,12 @@ why-investigators: claude-sonnet-5-thinking-high
 why-synthesizer: claude-opus-5-thinking-high
 reflect-judgment: claude-opus-5-thinking-high
 reflect-tooling: claude-sonnet-5-thinking-high
-reflect-divergent: claude-fable-5-1
+reflect-divergent: claude-opus-5-thinking-high
 swarm workers: claude-sonnet-5-thinking-high
-arena runners: claude-sonnet-5-thinking-high, claude-sonnet-5-thinking-high
+arena runners: claude-sonnet-5-thinking-high
 arena cross-judge pool: claude-opus-5-thinking-high
-architect runners: claude-opus-5-thinking-high, claude-sonnet-5-thinking-high, claude-haiku-4-5, claude-fable-5-1
-interrogate reviewers: claude-opus-5-thinking-high, claude-sonnet-5-thinking-high, claude-haiku-4-5, claude-fable-5-1
+architect runners: claude-opus-5-thinking-high, claude-sonnet-5-thinking-high, claude-haiku-4-5
+interrogate reviewers: claude-opus-5-thinking-high, claude-sonnet-5-thinking-high
 ```
 
 ### 6. Prove a reader can find its role
@@ -85,12 +85,12 @@ Each label is spelled the way its reader looks it up. Hyphenated labels come fro
 | `why-synthesizer` | **why** | `claude-opus-5-thinking-high` |
 | `reflect-judgment` | **reflect**, for the judgment lens and the synthesizer | `claude-opus-5-thinking-high` |
 | `reflect-tooling` | **reflect** | `claude-sonnet-5-thinking-high` |
-| `reflect-divergent` | **reflect** | `claude-fable-5-1` |
+| `reflect-divergent` | **reflect** | `claude-opus-5-thinking-high` |
 | `swarm workers` | **swarm** | `claude-sonnet-5-thinking-high` |
 | `arena runners` | **arena**, panel | one each on `claude-sonnet-5-thinking-high` |
 | `arena cross-judge pool` | **arena**, one entry chosen | `claude-opus-5-thinking-high` |
-| `architect runners` | **architect**, panel | `claude-opus-5-thinking-high`, `claude-sonnet-5-thinking-high`, `claude-haiku-4-5`, `claude-fable-5-1` |
-| `interrogate reviewers` | **interrogate**, panel sized by entry count | `claude-opus-5-thinking-high`, `claude-sonnet-5-thinking-high`, `claude-haiku-4-5`, `claude-fable-5-1` |
+| `architect runners` | **architect**, panel | `claude-opus-5-thinking-high`, `claude-sonnet-5-thinking-high` |
+| `interrogate reviewers` | **interrogate**, panel sized by entry count | `claude-opus-5-thinking-high`, `claude-sonnet-5-thinking-high`|
 
 Claude Code spawns Claude-family models only, so panel diversity comes from spreading entries across model tiers rather than across vendors.
 

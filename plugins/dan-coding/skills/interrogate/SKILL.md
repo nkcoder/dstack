@@ -40,7 +40,6 @@ Launch all reviewers in a single message using the Agent tool. Use the `interrog
 | Reviewer A | `claude-opus-5-thinking-high` |
 | Reviewer B | `claude-sonnet-5-thinking-high` |
 | Reviewer C | `claude-haiku-4-5` |
-| Reviewer D | `claude-fable-5-1` |
 
 For each reviewer:
 - `subagent_type`: `general-purpose`
