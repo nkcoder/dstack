@@ -12,6 +12,12 @@ This repo is a Claude Code plugin marketplace (`dstack`) with two plugins: `dan-
 /plugin install dan-financial@dstack
 ```
 
+## Update
+
+```
+/plugin marketplace update nkcoder/dstack
+```
+
 ## dan-coding
 
 [`plugins/dan-coding/`](plugins/dan-coding/) — software engineering skills, agents, and principles.
