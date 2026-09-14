@@ -34,7 +34,7 @@ One message, three `Agent` calls, `subagent_type: general-purpose`, explicit `mo
 |---|---|---|
 | Judgment | your configured reflect-judgment model (default `claude-opus-5-thinking-high`) | `references/judgment-reviewer.md` |
 | Tooling | your configured reflect-tooling model (default `claude-sonnet-5-thinking-high`) | `references/tooling-reviewer.md` |
-| Divergent | your configured reflect-divergent model (default `claude-fable-5-1`) | `references/divergent-reviewer.md` |
+| Divergent | your configured reflect-divergent model (default `claude-opus-5-thinking-xhigh`) | `references/divergent-reviewer.md` |
 
 Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in the `Agent` response body.
 
