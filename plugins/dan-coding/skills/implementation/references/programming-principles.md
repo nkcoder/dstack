@@ -2,17 +2,18 @@
 
 Guidelines for how to approach a coding task and how to shape the resulting code — independent of language or paradigm. These are lenses to look at a task through, not a checklist to satisfy mechanically or cite in comments. Apply judgment: a principle that makes code worse in a specific case should lose to the specific case.
 
-**Tradeoff:** these guidelines bias toward caution over speed. For trivial tasks, use judgment.
+For trivial tasks, use judgment.
 
 ## 1. Think before coding
 
 **Don't assume. Don't hide confusion. Surface tradeoffs.**
 
 Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them — don't pick silently.
+- State your assumptions explicitly.
+- If you're unsure about a fact (how the code behaves, what a call returns), find out by reading or running it. Don't ask.
+- If you're unsure about intent, scope, or a product choice, ask.
+- If multiple interpretations exist and the choice is small, pick one and say which. If it's big, ask.
 - If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
 
 ## 2. Build only what's needed
 

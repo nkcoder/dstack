@@ -35,20 +35,14 @@ Validate by hand instead: confirm each `SKILL.md`'s frontmatter (`name` matching
 
 Each skill is a directory with a `SKILL.md` (YAML frontmatter: `name`, `description`, optionally `disable-model-invocation: true` to make it callable only by explicit `/name` and never auto-triggered) plus optional `references/` subdirectories. `description` is load-bearing: it's what a future Claude session matches against to decide whether to load the skill, so it must state concretely when to use it, not just what it is.
 
-`dan-coding` has four skills, forming one loop:
+`dan-coding` has four skills that form one loop. There are no agents. The loop runs inline in the user's session on purpose, because a fresh subagent per phase loses the conversation context and costs far more tokens. Don't reintroduce per-phase subagents without the user asking.
 
-- **`dan-mode`** (`disable-model-invocation: true`, reachable only via `/dan-mode` or the `dan-agent` agent) is the umbrella skill. Its `SKILL.md` states the loop — `Implementation => Verification => Review` — and, for each phase, spawns a fresh subagent on a specific model to run the corresponding skill below. It does no work itself; it only dispatches.
-- **`implementation`** does the actual coding work (feature, bugfix, refactor, optimization, ...). Its `references/` hold `programming-principles.md` plus per-language best-practices files (`typescript-best-practices.md`, `python-best-practices.md`), loaded when the task matches that language.
-- **`verification`** checks the implementation against the goal (unit/integration/throw-away e2e tests), invoked once implementation finishes.
-- **`review`** runs before asking the user to look at the work (pre-commit/push). It delegates to Claude Code's own `/code-review`, `/security-review`, and `/simplify`, classifies findings by severity (critical/high/medium/low), and applies the unslop and comment-cleanup passes from its `references/`.
-
-Findings at critical/high/medium severity from `review` send the loop back to `implementation`; `low` findings don't block.
+- **`dan-mode`** (`disable-model-invocation: true`, so only `/dan-mode` starts it) runs `implementation`, then `verification`, then `review`, and repeats until no critical, high, or medium findings remain, capped at three review rounds. It stops before commit. It also owns the reply and comment rules and when to ask the user versus decide. Its `references/unslop.md` is the full list of prose patterns to avoid, and `review` points at it too.
+- **`implementation`** covers how to write the change, including root-causing bugs. Its `references/` hold `programming-principles.md`, always read, plus short `typescript-best-practices.md` and `python-best-practices.md`, read only for that language. Keep the language files short and limited to rules that change outcomes. They load on every coding task.
+- **`verification`** proves the change works by running it. It covers failing-first regression tests for bugs, the test-behavior-not-implementation rule, and exercising the real path once.
+- **`review`** runs Claude Code's own `/code-review` at high effort, runs `/security-review` only when the diff touches a trust boundary, and checks comments (`references/no-comment.md`) and prose. It confirms and grades each finding and never edits code. Fixes happen back in `implementation`.
 
 `dan-financial` currently has one skill, `investment-buffett`, and no `dan-mode`-style routing layer.
-
-### Agents (`plugins/<plugin>/agents/*.md`)
-
-Standalone subagent definitions, same frontmatter shape as skills (`name`, `description`, optionally `is_background: true`). `dan-agent.md` is the routing target for `/dan-mode`: a thin pointer telling the subagent to read `dan-mode`'s `SKILL.md` in full before acting and run its loop — substituting a generic subagent type for it causes drift because the routing logic lives entirely in that `SKILL.md`, not in the agent file.
 
 ### Cross-referencing convention
 
