@@ -20,42 +20,18 @@ This repo is a Claude Code plugin marketplace (`dstack`) with two plugins: `dan-
 
 ## dan-coding
 
-[`plugins/dan-coding/`](plugins/dan-coding/) — software engineering skills, agents, and principles.
+[`plugins/dan-coding/`](plugins/dan-coding/) is a coding mode built on one loop, implement, verify, review. Start it with `/dan-mode`.
 
-### Agents
+Implement and verify run on your session's model, and review runs in a separate reviewer on Opus 5.5 at high effort. The intended setup is Sonnet 5 at high effort as your default. Set it once with `/model sonnet` and `/effort high`, pressing Enter each time to save it. The `sonnet` alias means Sonnet 5 only on the Anthropic API, so on Bedrock or Google Cloud use `/model claude-sonnet-5`.
 
-- [`plugins/dan-coding/agents/dan-agent.md`](plugins/dan-coding/agents/dan-agent.md) — routing target for `/dan-mode`; reads the `dan-mode` skill in full before any work.
-- [`plugins/dan-coding/agents/comment-sicko.md`](plugins/dan-coding/agents/comment-sicko.md) — deranged comment-hater that hunts down and deletes narration, banners, and workaround comments.
+Optional: install `claude-md-management` from the official marketplace. When a session teaches something worth keeping, dan-mode runs its `/claude-md-management:revise-claude-md` to propose CLAUDE.md additions for your approval. Without it, dan-mode lists the suggestions in its final reply.
 
 ### Skills
 
-- [`plugins/dan-coding/skills/architect/`](plugins/dan-coding/skills/architect/SKILL.md) — sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in.
-- [`plugins/dan-coding/skills/arena/`](plugins/dan-coding/skills/arena/SKILL.md) — spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it.
-- [`plugins/dan-coding/skills/automate-me/`](plugins/dan-coding/skills/automate-me/SKILL.md) — draft or revise a personal "-mode" skill capturing how the user works, via skill-creator + unslop.
-- [`plugins/dan-coding/skills/blast-radius/`](plugins/dan-coding/skills/blast-radius/SKILL.md) — find what a change could break beyond the diff, and prove the one fact that makes it safe by running real code.
-- [`plugins/dan-coding/skills/bro/`](plugins/dan-coding/skills/bro/SKILL.md) — restate the last message in plain human language, no jargon.
-- [`plugins/dan-coding/skills/coding-best-practice/`](plugins/dan-coding/skills/coding-best-practice/SKILL.md) — language-agnostic coding guidelines covering restraint and design, distilled from classic engineering literature plus common LLM failure modes.
-- [`plugins/dan-coding/skills/create-verification-skill/`](plugins/dan-coding/skills/create-verification-skill/SKILL.md) — generate a project-local verification skill that drives an app the way a user does.
-- [`plugins/dan-coding/skills/dan-mode/`](plugins/dan-coding/skills/dan-mode/SKILL.md) — Dan's agent style: concise responses, deliberate subagents, unslopped prose, simple code, verified work.
-- [`plugins/dan-coding/skills/figure-it-out/`](plugins/dan-coding/skills/figure-it-out/SKILL.md) — auditable playbook for large migrations or ambitious multi-part changes with no narrower playbook.
-- [`plugins/dan-coding/skills/grilling/`](plugins/dan-coding/skills/grilling/SKILL.md) — grill the user relentlessly about a plan, decision, or idea to stress-test their thinking.
-- [`plugins/dan-coding/skills/how/`](plugins/dan-coding/skills/how/SKILL.md) — explain subsystem architecture, runtime flow, and placement/ownership questions.
-- [`plugins/dan-coding/skills/interrogate/`](plugins/dan-coding/skills/interrogate/SKILL.md) — multiple LLM reviewers challenge a change from independent angles.
-- [`plugins/dan-coding/skills/maintain-verification-skill/`](plugins/dan-coding/skills/maintain-verification-skill/SKILL.md) — periodic audit that keeps a project's verification skill and feature map honest.
-- [`plugins/dan-coding/skills/make-bot-ui/`](plugins/dan-coding/skills/make-bot-ui/SKILL.md) — build a custom UI that wakes a Grok Bot over a webhook, optionally exposed on Tailscale.
-- [`plugins/dan-coding/skills/no-comments/`](plugins/dan-coding/skills/no-comments/SKILL.md) — spawn Comment Sicko, fix accepted findings, and encode claimed constraints instead of commenting them.
-- [`plugins/dan-coding/skills/principle-*/`](plugins/dan-coding/skills/dan-mode/SKILL.md) — 22 single-concept leaf skills (`principle-fix-root-causes`, `principle-boundary-discipline`, `principle-laziness-protocol`, ...) referenced by name from `dan-mode` and other skills rather than invoked directly. See `dan-mode`'s Principles index (linked) for the full list with when-to-apply notes.
-- [`plugins/dan-coding/skills/recall/`](plugins/dan-coding/skills/recall/SKILL.md) — reconstruct recent working context from chat history and shared state into a tight current-state brief.
-- [`plugins/dan-coding/skills/reflect/`](plugins/dan-coding/skills/reflect/SKILL.md) — spawn three parallel review subagents over the active transcript and route learnings to concrete skill edits.
-- [`plugins/dan-coding/skills/setup-dstack/`](plugins/dan-coding/skills/setup-dstack/SKILL.md) — configure which model each dstack role runs on, into the register the routed skills read.
-- [`plugins/dan-coding/skills/show-me-your-work/`](plugins/dan-coding/skills/show-me-your-work/SKILL.md) — keep a reviewable decision trail (TSV log) for long-running or unattended work.
-- [`plugins/dan-coding/skills/swarm/`](plugins/dan-coding/skills/swarm/SKILL.md) — fan out N parallel workers, drain them, return one report.
-- [`plugins/dan-coding/skills/tdd/`](plugins/dan-coding/skills/tdd/SKILL.md) — write a failing test then make it pass, when explicitly requested or the bug has an obvious cheap test target.
-- [`plugins/dan-coding/skills/teach/`](plugins/dan-coding/skills/teach/SKILL.md) — explain a body of work plainly by running `how` and `why` and weaving the results together.
-- [`plugins/dan-coding/skills/technical-writing/`](plugins/dan-coding/skills/technical-writing/SKILL.md) — Diátaxis structure, Google developer style, and STE instruction rules for docs, RFCs, and PR descriptions.
-- [`plugins/dan-coding/skills/typescript-best-practices/`](plugins/dan-coding/skills/typescript-best-practices/SKILL.md) — TypeScript best practices for any `.ts`/`.tsx` file.
-- [`plugins/dan-coding/skills/unslop/`](plugins/dan-coding/skills/unslop/SKILL.md) — cut AI tells from any writing.
-- [`plugins/dan-coding/skills/why/`](plugins/dan-coding/skills/why/SKILL.md) — discover available MCPs and query each evidence source in parallel for a cited read on design rationale and decisions.
+- [`dan-mode`](plugins/dan-coding/skills/dan-mode/SKILL.md) runs the loop in the current session, fixes critical, high, and medium review findings, and stops before commit. It also sets the tone for replies and code comments, which is plain and jargon-free.
+- [`implementation`](plugins/dan-coding/skills/implementation/SKILL.md) covers how to write the change, including finding the root cause of bugs. Its references cover programming principles, TypeScript, Python, architecture, frontend, client-server APIs, and databases, each loaded only when the task needs it.
+- [`verification`](plugins/dan-coding/skills/verification/SKILL.md) proves the change works by running it, with failing-first tests for bugs and tests that check behavior rather than implementation.
+- [`review`](plugins/dan-coding/skills/review/SKILL.md) runs `/code-review`, runs `/security-review` when the diff touches a trust boundary, checks comments and prose, and grades each finding.
 
 ## dan-financial
 

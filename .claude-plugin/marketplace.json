@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "dan-coding",
-      "description": "Personal collection of software engineering skills, agents, and principles for Claude Code.",
+      "description": "Personal collection of software engineering skills and agents for Claude Code.",
       "author": {
         "name": "Daniel"
       },
