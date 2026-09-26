@@ -22,6 +22,10 @@ This repo is a Claude Code plugin marketplace (`dstack`) with two plugins: `dan-
 
 [`plugins/dan-coding/`](plugins/dan-coding/) is a coding mode built on one loop, implement, verify, review. Start it with `/dan-mode`.
 
+Implement and verify run on your session's model, and review runs in a separate reviewer on Opus 5.5 at high effort. The intended setup is Sonnet 5 at high effort as your default. Set it once with `/model sonnet` and `/effort high`, pressing Enter each time to save it. The `sonnet` alias means Sonnet 5 only on the Anthropic API, so on Bedrock or Google Cloud use `/model claude-sonnet-5`.
+
+Optional: install `claude-md-management` from the official marketplace. When a session teaches something worth keeping, dan-mode runs its `/claude-md-management:revise-claude-md` to propose CLAUDE.md additions for your approval. Without it, dan-mode lists the suggestions in its final reply.
+
 ### Skills
 
 - [`dan-mode`](plugins/dan-coding/skills/dan-mode/SKILL.md) runs the loop in the current session, fixes critical, high, and medium review findings, and stops before commit. It also sets the tone for replies and code comments, which is plain and jargon-free.
