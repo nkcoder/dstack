@@ -42,6 +42,8 @@ Measure before and after, on the same input. Keep a change only if the numbers s
 - Follow `references/programming-principles.md`. Read it at the start of any coding task.
 - For TypeScript (`*.ts`, `*.tsx`), also follow `references/typescript-best-practices.md`.
 - For Python (`*.py`), also follow `references/python-best-practices.md`.
+- When the task touches UI code (components, pages, styles, client state), also follow `references/frontend.md`.
+- When the task adds or changes an endpoint, or client code that calls one, also follow `references/api.md`.
 - Every changed line should trace back to the task. Don't clean up unrelated code. Mention it instead.
 - Remove anything your change made unused.
 - Write comments clean as you go. Keep one only for a non-obvious why the code can't show.

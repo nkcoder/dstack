@@ -44,6 +44,25 @@ Someone reading only the tests should learn what the code does.
 - Keep the setup that matters inside the test, where the reader can see it. Hide only noise in helpers.
 - Pure logic gets tested with plain inputs and outputs and no mocks. If a test needs many mocks, the code is mixing logic with side effects. When it's your code, move the logic into a pure function and test that. When it's outside the task, mention it in the report instead of piling on mocks.
 
+## UI changes
+
+When the change touches UI, also do these.
+
+- Test components the way users find things, by role, label, and visible text, Testing Library style. Don't query by CSS class or reach into component state. Assert what the user sees.
+- Drive the real page in a browser with the **run** skill or Playwright. Walk through every state (loading, empty, error, success). Force the error state by failing the request at the network layer or stopping the backend.
+- Use the page with the keyboard only. Reach every control, see where focus is, and open and close any dialogs.
+- Run an automated accessibility check like axe or Lighthouse. It catches only part of the problems, so the keyboard pass still matters.
+- Look at phone and desktop widths, and dark mode if the project supports it. Take screenshots and actually look at them.
+- Check the browser console for new errors or warnings.
+
+## API changes
+
+When the change touches an endpoint, also do these.
+
+- Call it for real, including the failure paths, like invalid input, no login, another user's record, and a repeated submit with the same idempotency key.
+- Confirm the current client still works against the new server. If the change could break an older client, show why it can't, or go back and make it additive.
+- Cover the main user flow once, end to end, through the real client and the real server.
+
 ## When a check fails
 
 Treat it as a bug and find the root cause. Go back to implementation and fix it there, then run this skill again. Don't retry flaky tests until they pass. A flaky test is a bug too, either in the code or in the test.
