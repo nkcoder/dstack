@@ -35,6 +35,15 @@ A good test looks like `expect(slugify('Hello, World!')).toBe('hello-world')`.
 
 Never change a test just to match a wrong implementation, and never weaken an assertion to get green. If a test fails, the code is wrong until you've proven the test is.
 
+## Tests are documentation
+
+Someone reading only the tests should learn what the code does.
+
+- Name each test for the behavior in plain words, like `rejects an expired coupon`, not `test_coupon_3`.
+- Test one behavior per test, in three visible parts. Set up, act, then check.
+- Keep the setup that matters inside the test, where the reader can see it. Hide only noise in helpers.
+- Pure logic gets tested with plain inputs and outputs and no mocks. If a test needs many mocks, the code is mixing logic with side effects. When it's your code, move the logic into a pure function and test that. When it's outside the task, mention it in the report instead of piling on mocks.
+
 ## When a check fails
 
 Treat it as a bug and find the root cause. Go back to implementation and fix it there, then run this skill again. Don't retry flaky tests until they pass. A flaky test is a bug too, either in the code or in the test.

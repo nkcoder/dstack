@@ -11,10 +11,11 @@ Review the current change: uncommitted edits plus any commits on this branch tha
 
 1. **Code review.** Run `/code-review` at high effort. It checks correctness, reuse, simplification, and efficiency.
 2. **Security review.** Run `/security-review` only when the diff touches a trust boundary. That means login or permissions, parsing or forwarding untrusted input, secrets or credentials, a new external call or dependency, file paths built from user input, or a change to what a client can reach. Decide this from the diff itself. If none apply, the whole answer is "security review skipped, no trust boundary in the diff."
-3. **Comments.** Check every comment in the diff against `references/no-comment.md`.
-4. **Prose.** Check the prose in the diff, including docs, READMEs, user-facing messages, and comments, against `../dan-mode/references/unslop.md`.
-5. **Confirm each finding.** Reviewers raise false alarms. Read the code each finding points at, and drop the ones that aren't real with a one-line reason.
-6. **Grade and report** what's left.
+3. **Design.** Check the diff against `../implementation/references/programming-principles.md`. Look hardest at names, side effects mixed into logic, mutation that could be a new value, business rules outside the domain model, bare primitives standing in for domain ideas, and one change that needed edits in unrelated places. Flag only what will cost the next person, not matters of taste.
+4. **Comments.** Check every comment in the diff against `references/no-comment.md`.
+5. **Prose.** Check the prose in the diff, including docs, READMEs, user-facing messages, and comments, against `../dan-mode/references/unslop.md`.
+6. **Confirm each finding.** Reviewers raise false alarms. Read the code each finding points at, and drop the ones that aren't real with a one-line reason.
+7. **Grade and report** what's left.
 
 ## Grades
 

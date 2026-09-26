@@ -11,8 +11,9 @@ Make the change correct first, then simple, then fast enough. Fast enough means 
 
 1. **Know the goal.** Restate what done looks like as something you can check. "Add validation" becomes "invalid input X is rejected with error Y, valid input still works."
 2. **Read the code you'll touch**, plus its callers and its tests. Match how the project already does things, including its style, libraries, error handling, and test layout.
-3. **Name the data shape first.** Decide what the core types and structures are before writing logic. A good shape removes branches later.
-4. **Pick the smallest change that fully solves it.** If there's a simpler approach than the one asked for, say so.
+3. **Name the data shape first.** Decide what the core types and structures are before writing logic, using the domain's own words. A good shape removes branches later. See "Model the domain" in the principles.
+4. **Decide where the side effects go.** Keep the logic in pure functions and push I/O to the edges. See "Prefer a functional style" in the principles.
+5. **Pick the smallest change that fully solves it.** If there's a simpler approach than the one asked for, say so.
 
 ## Bugs, find the root cause
 
@@ -22,6 +23,14 @@ Make the change correct first, then simple, then fast enough. Fast enough means 
 - Look for the same mistake elsewhere and fix every instance.
 - When stuck, add logging or read the real error. Don't guess.
 - If something breaks only after a restart, suspect stale state (caches, config, lock files) before code.
+
+## Refactoring, change structure without changing behavior
+
+1. Make sure tests cover the behavior you're about to restructure. If they don't, first write tests that pin down what the code does today, even the odd parts.
+2. Take one small, named step at a time, like rename, extract function, inline, move, or replace a repeated `switch` with a lookup table.
+3. Run the tests after every step. If they fail, undo the step instead of debugging forward.
+4. Use tool-driven edits (LSP rename, a codemod) over hand edits across files, so no call site is missed.
+5. Never mix a refactor with a behavior change in the same step. When a task needs both, refactor first, verify, then change behavior.
 
 ## Performance work
 

@@ -23,6 +23,7 @@ Data from outside the program (HTTP, JSON, env vars, files, user input, `localSt
 
 ## Errors and async
 
+- For expected failures the caller must handle, like "not found" or "invalid input", return a discriminated union such as `{ ok: true; value: T } | { ok: false; error: E }`. Throw only for bugs and failures the caller can't reasonably handle, and follow the project if it already has a convention.
 - Throw `Error` objects, never strings. Use a custom error class when callers need to tell errors apart.
 - Catch only where you can handle the error or add context. Never catch and ignore. Type caught values as `unknown`.
 - Await or return every promise. A floating promise loses its errors.
