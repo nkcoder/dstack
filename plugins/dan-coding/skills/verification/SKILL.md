@@ -10,12 +10,13 @@ Prove the change does what was asked, by checking the real thing. "It compiles" 
 ## Steps
 
 1. **Restate what done looks like.** Take the goal from implementation and list the behaviors that must be true, including the edge cases that matter.
-2. **Run the project's existing checks.** Typecheck, lint, and the tests near the code you changed. Find the commands in `package.json`, `Makefile`, `pyproject.toml`, the README, or `CLAUDE.md`.
+2. **Run the checks CI runs.** Read the CI config (`.github/workflows/`, `.gitlab-ci.yml`, or similar) and use the same typecheck, lint, test, and build commands, so the pull request doesn't fail after Dan pushes. If there's no CI, find the commands in `package.json`, `Makefile`, `pyproject.toml`, the README, or `CLAUDE.md`. While iterating, run only the tests near the code you changed.
 3. **For a bug, show it failing first.** Write a test that reproduces the bug. Run it before the fix and confirm it fails for the right reason. Then confirm it passes after the fix. If a test would be expensive or brittle, use the closest cheap check instead, like a script or a command that reproduces it. Say why you skipped the test.
-4. **For new or changed behavior, add tests.** Cover the behaviors from step 1. Follow the rules in the next section.
+4. **For new or changed behavior, add tests at the cheapest level that proves it.** Pure logic gets unit tests. Code that talks to a database or another service gets integration tests against the real thing, like a test database of the same engine as production. Keep end-to-end tests for the few main user flows. Cover the behaviors from step 1, and follow the rules in the next section.
 5. **Exercise the real path once.** Run the thing the way a user would. Call the endpoint, run the CLI command, load the page, or run the script on real input. For a UI or an app, use the **run** skill or drive a browser. Put throwaway end-to-end scripts in the scratchpad, and delete them after unless they're worth keeping as tests.
 6. **Follow the data all the way through.** Check the output, the saved file, the database row, or the log line, not just the exit code.
-7. **Run the full test suite once** before handing off to review.
+7. **Run the area checks.** When the change touches UI, an endpoint, or the database, run the "Verify" section of `frontend.md`, `api.md`, or `database.md` in `../implementation/references/`. Inside the dan-mode loop those files are already loaded from implementation. Skip the ones the change doesn't touch.
+8. **Run the full set of CI checks once** before handing off to review.
 
 ## Test behavior, not implementation
 
@@ -43,25 +44,6 @@ Someone reading only the tests should learn what the code does.
 - Test one behavior per test, in three visible parts. Set up, act, then check.
 - Keep the setup that matters inside the test, where the reader can see it. Hide only noise in helpers.
 - Pure logic gets tested with plain inputs and outputs and no mocks. If a test needs many mocks, the code is mixing logic with side effects. When it's your code, move the logic into a pure function and test that. When it's outside the task, mention it in the report instead of piling on mocks.
-
-## UI changes
-
-When the change touches UI, also do these.
-
-- Test components the way users find things, by role, label, and visible text, Testing Library style. Don't query by CSS class or reach into component state. Assert what the user sees.
-- Drive the real page in a browser with the **run** skill or Playwright. Walk through every state (loading, empty, error, success). Force the error state by failing the request at the network layer or stopping the backend.
-- Use the page with the keyboard only. Reach every control, see where focus is, and open and close any dialogs.
-- Run an automated accessibility check like axe or Lighthouse. It catches only part of the problems, so the keyboard pass still matters.
-- Look at phone and desktop widths, and dark mode if the project supports it. Take screenshots and actually look at them.
-- Check the browser console for new errors or warnings.
-
-## API changes
-
-When the change touches an endpoint, also do these.
-
-- Call it for real, including the failure paths, like invalid input, no login, another user's record, and a repeated submit with the same idempotency key.
-- Confirm the current client still works against the new server. If the change could break an older client, show why it can't, or go back and make it additive.
-- Cover the main user flow once, end to end, through the real client and the real server.
 
 ## When a check fails
 

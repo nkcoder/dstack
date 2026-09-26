@@ -25,7 +25,7 @@ This repo is a Claude Code plugin marketplace (`dstack`) with two plugins: `dan-
 ### Skills
 
 - [`dan-mode`](plugins/dan-coding/skills/dan-mode/SKILL.md) runs the loop in the current session, fixes critical, high, and medium review findings, and stops before commit. It also sets the tone for replies and code comments, which is plain and jargon-free.
-- [`implementation`](plugins/dan-coding/skills/implementation/SKILL.md) covers how to write the change, including finding the root cause of bugs. Its references cover programming principles, TypeScript, Python, architecture, frontend, and client-server APIs, each loaded only when the task needs it.
+- [`implementation`](plugins/dan-coding/skills/implementation/SKILL.md) covers how to write the change, including finding the root cause of bugs. Its references cover programming principles, TypeScript, Python, architecture, frontend, client-server APIs, and databases, each loaded only when the task needs it.
 - [`verification`](plugins/dan-coding/skills/verification/SKILL.md) proves the change works by running it, with failing-first tests for bugs and tests that check behavior rather than implementation.
 - [`review`](plugins/dan-coding/skills/review/SKILL.md) runs `/code-review`, runs `/security-review` when the diff touches a trust boundary, checks comments and prose, and grades each finding.
 

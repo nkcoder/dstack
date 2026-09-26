@@ -44,6 +44,7 @@ Measure before and after, on the same input. Keep a change only if the numbers s
 - For Python (`*.py`), also follow `references/python-best-practices.md`.
 - When the task touches UI code (components, pages, styles, client state), also follow `references/frontend.md`.
 - When the task adds or changes an endpoint, or client code that calls one, also follow `references/api.md`.
+- When the task touches queries, schema, migrations, or transactions, also follow `references/database.md`.
 - Every changed line should trace back to the task. Don't clean up unrelated code. Mention it instead.
 - Remove anything your change made unused.
 - Write comments clean as you go. Keep one only for a non-obvious why the code can't show.
@@ -51,4 +52,4 @@ Measure before and after, on the same input. Keep a change only if the numbers s
 
 ## Done when
 
-The change does what the goal says, and you know exactly how you'll prove it in verification.
+The change does what the goal says, and you know exactly how you'll prove it in verification. Docs that describe the changed behavior are updated too, like the README, API docs, changelog, and `.env.example`.

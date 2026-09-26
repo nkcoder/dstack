@@ -19,6 +19,7 @@ Each section names its main source. The sources are Clean Code (Martin), The Pra
 - **Make it work, make it right, then make it fast.** Optimize only what measurement shows is slow.
 - No error handling or flexibility for cases that can't happen.
 - If you wrote 200 lines and it could be 50, rewrite it. Ask whether a senior engineer would call it overcomplicated.
+- **Add dependencies deliberately.** A new runtime dependency is code you now maintain. Prefer the standard library or something the project already uses. Before adding one, check that it's actively maintained, that its license fits, what it adds in size, and that it has no known vulnerabilities (`npm audit`, `pip-audit`, or the ecosystem's equivalent). Name every new dependency in the final reply.
 
 ## 3. Touch only what you must
 
@@ -102,3 +103,12 @@ Turn each task into a goal you can check.
 - "Refactor X" becomes "the same tests pass before and after, unchanged."
 
 For multi-step work, write a short plan where each step ends in a check.
+
+## 13. Secure and debuggable by default
+
+- Never build SQL, shell commands, HTML, or file paths by joining strings with input. Use query parameters, argument arrays, the framework's escaping, and a check that a path stays inside its allowed folder.
+- Secrets come from the environment or a secret store. Never commit them, print them, or put them in error messages. When you add one, add its name without the value to `.env.example` or the project's equivalent.
+- Give each component, token, and database user only the access it needs.
+- Log failures with enough context to debug them later without a debugger. That means what was attempted, the relevant IDs, and the error. Use the project's logger with structured fields.
+- Never log secrets, tokens, passwords, or personal data.
+- Users get a safe error message that says what to do next. Logs get the details.

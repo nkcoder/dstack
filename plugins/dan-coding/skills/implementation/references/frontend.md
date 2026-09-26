@@ -73,3 +73,16 @@ This is required, not polish. Aim for WCAG 2.2 AA.
 - Hiding a button is not authorization. The server checks every request.
 - Everything shipped to the browser is public. Never put secrets in client code or in public env vars like `NEXT_PUBLIC_*` or `VITE_*`.
 - Check redirect URLs taken from query parameters against an allowlist, so the app can't be used to send users to a malicious site.
+
+## Verify
+
+- Test components the way users find things, by role, label, and visible text, Testing Library style. Don't query by CSS class or reach into component state. Assert what the user sees.
+- Drive the real page in a browser with the **run** skill or Playwright. Walk through every state (loading, empty, error, success). Force the error state by failing the request at the network layer or stopping the backend.
+- Use the page with the keyboard only. Reach every control, see where focus is, and open and close any dialogs.
+- Run an automated accessibility check like axe or Lighthouse. It catches only part of the problems, so the keyboard pass still matters.
+- Look at phone and desktop widths, and dark mode if the project supports it. Take screenshots and actually look at them.
+- Check the browser console for new errors or warnings.
+
+## Review
+
+Look hardest at missing loading, empty, and error states, accessibility (real elements, labels, keyboard, focus), the same data stored in two places, raw HTML insertion, and secrets in client code. An accessibility failure that blocks a user is at least high.

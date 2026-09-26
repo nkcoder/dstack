@@ -64,3 +64,13 @@ Users leave tabs open for days, and mobile apps update late. During every deploy
 - Client requests have a timeout and can be cancelled, for example when the user navigates away.
 - Rate-limit endpoints that are expensive or easy to abuse, like login, signup, and search. Return 429 with a `Retry-After` header.
 - Cap request body size and page size on the server.
+
+## Verify
+
+- Call the endpoint for real, including the failure paths, like invalid input, no login, another user's record, and a repeated submit with the same idempotency key.
+- Confirm the current client still works against the new server. If the change could break an older client, show why it can't, or go back and make it additive.
+- Cover the main user flow once, end to end, through the real client and the real server.
+
+## Review
+
+Look hardest at changes that break older clients, missing server-side authorization per record, and submits that aren't safe to repeat. A change that breaks older clients and missing authorization are each at least high.

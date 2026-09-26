@@ -42,7 +42,7 @@ Measure first with `cProfile` or `py-spy`. The usual real problems are membershi
 
 - Use pytest with plain `assert`. Use fixtures for setup and `parametrize` for tables of cases.
 - Test through the public functions, the way callers use the code.
-- Prefer real dependencies (`tmp_path`, SQLite, a test database) over mocks. Mock only what you can't run locally, like third-party network APIs.
+- Prefer real dependencies (`tmp_path`, a test database of the same engine as production) over mocks. Mock only what you can't run locally, like third-party network APIs.
 - Control time and randomness by passing them in, not by patching globals.
 
 ## Checks to run

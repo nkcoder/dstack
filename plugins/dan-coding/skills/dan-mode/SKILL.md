@@ -17,9 +17,13 @@ Run every phase yourself, in this session. You already have the context. A fresh
 3. **Review.** Load the **review** skill. It returns findings graded critical, high, medium, or low.
 4. **Fix and repeat.** Fix every critical, high, and medium finding. Then verify again and review again. Low findings are optional. Fix them only when the fix is small and clearly right.
 
+In later rounds, review only what the fixes changed. Rerun `/code-review` only when a fix changed real logic, and rerun the other review checks only where the fixes touched them.
+
 Stop after three review rounds. If critical, high, or medium findings remain, stop and tell Dan what's left and why you couldn't close it.
 
 Scale the loop to the task. A question or investigation that changes no code skips the loop and gets a direct answer. A one-line change still gets verified, but its review can be light.
+
+For a large task, split it into steps that each leave the code working. Implement and verify each step, then review once at the end. Track the steps in the task list, so a long session that gets summarized doesn't lose its place. If the split or the approach is a big fork, show Dan the plan before starting.
 
 When the loop is clean, stop before committing. Dan commits.
 
@@ -65,3 +69,5 @@ When the loop is clean, write one short reply with these parts.
 - **How I know it works.** The commands you ran and what they showed.
 - **Review.** What the review found and fixed, any low findings left, and the security result or why it didn't apply.
 - **Decisions and open questions.** Calls you made on your own, and anything that needs Dan.
+- **Shipping notes.** What the deploy needs, like new env vars or config, migrations and the order to run them, feature flags, new dependencies, breaking changes, and how to roll back. Write "none" when there's nothing.
+- **Suggested commit message.** In the repo's style (check `git log`), saying why the change was made, not just what changed.
