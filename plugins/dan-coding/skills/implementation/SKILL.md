@@ -14,6 +14,7 @@ Make the change correct first, then simple, then fast enough. Fast enough means 
 3. **Name the data shape first.** Decide what the core types and structures are before writing logic, using the domain's own words. A good shape removes branches later. See "Model the domain" in the principles.
 4. **Decide where the side effects go.** Keep the logic in pure functions and push I/O to the edges. See "Prefer a functional style" in the principles.
 5. **Pick the smallest change that fully solves it.** If there's a simpler approach than the one asked for, say so.
+6. **If the task is about architecture, read `references/architecture.md` first.** That means it adds a service, module, or datastore, changes how components talk to each other, picks a technology that's hard to swap, changes a public API, event, or schema, or has explicit scale, reliability, or security goals. Skip it for everything else.
 
 ## Bugs, find the root cause
 
