@@ -1,6 +1,7 @@
 ---
 name: verification
 description: Prove a code change actually works by running it, not by reading it. Covers regression tests for bugs, behavior tests, and throwaway end-to-end checks. Use after implementing a change and before calling it done, and as the second phase of dan-mode.
+user-invocable: false
 ---
 
 # Verification
