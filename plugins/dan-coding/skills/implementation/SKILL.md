@@ -1,6 +1,7 @@
 ---
 name: implementation
 description: How to write or change code well, covering features, bug fixes, refactors, and performance work. Use when about to change code, and as the first phase of dan-mode.
+user-invocable: false
 ---
 
 # Implementation

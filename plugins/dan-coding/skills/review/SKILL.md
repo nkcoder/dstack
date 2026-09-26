@@ -1,6 +1,7 @@
 ---
 name: review
 description: Pre-commit review of the current change for bugs, security, design, comments, and prose, with every finding graded critical, high, medium, or low. Runs in a separate reviewer on Opus. Use when a change is implemented and verified and about to go to the user for commit, and as the third phase of dan-mode.
+user-invocable: false
 context: fork
 model: opus
 effort: high
