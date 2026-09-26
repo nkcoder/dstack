@@ -1,6 +1,6 @@
 ---
 name: dan-mode
-description: an's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for /dan-mode.
+description: Dan's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for /dan-mode.
 disable-model-invocation: true
 ---
 
@@ -8,18 +8,20 @@ disable-model-invocation: true
 
 The following process forms a loop: `Implementation => Verification => Review`.
 
+Each phase runs in a fresh subagent (Agent tool, `subagent_type: "general-purpose"`) on the model given below — a forked agent can't take a model override, so getting a different model per phase means spawning fresh. A fresh subagent starts with no context, so write its prompt to be self-contained: state the task plainly and point it at the current git diff / working tree rather than assuming it remembers earlier turns.
+
 ## Implementation
 
-When receiving a task, invoke the /implementation skill (../implementation/SKILL.md) to work on the task, use the model: `claude-sonnet-5-thinking-high`.
+When receiving a task, spawn a subagent with `model: "sonnet"` that invokes the **implementation** skill and works the task.
 
 ## Verification
 
-When the task is finished, invoke the /verification skill (../verification/SKILL.md) to verify the the implementation, use the model: `claude-sonnet-5-thinking-high`.
+When the task is finished, spawn a subagent with `model: "sonnet"` that invokes the **verification** skill and verifies the implementation against the goal.
 
 ## Review
 
-When the task is done, and about to ask the user to review (before commit/push), invoke the /review skill (../review/SKILL.md), use the model: `claude-opus-5.5-thinking-high`.
+When the task is done, and about to ask the user to review (before commit/push), spawn a subagent with `model: "opus"` that invokes the **review** skill.
 
 ## Loop
 
-For any findings in the `Review` step, go to the `Implementation => Verification => Review` loop until no critical/high/medium review feedback. 
+For any findings in the `Review` step, go back to `Implementation => Verification => Review` until no critical/high/medium review feedback remains.

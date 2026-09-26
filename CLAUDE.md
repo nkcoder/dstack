@@ -6,10 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `dstack` is a Claude Code **plugin marketplace** (`.claude-plugin/marketplace.json`) publishing two plugins:
 
-- **`dan-coding`** (`plugins/dan-coding/`) — software engineering skills, agents, and principles. Everything most work in this repo touches.
+- **`dan-coding`** (`plugins/dan-coding/`) — a minimal software engineering agent style built around a single Implementation => Verification => Review loop. Everything most work in this repo touches.
 - **`dan-financial`** (`plugins/dan-financial/`) — a single skill, Warren Buffett-style investment analysis (`skills/investment-buffett/`).
 
-There is no application to build or run; the "product" is Markdown skill/agent definitions plus a small TypeScript/Bun toolchain that backs a few `dan-coding` skills. Users install via Claude Code itself, not a local script:
+There is no application to build or run; the "product" is Markdown skill/agent definitions. Users install via Claude Code itself, not a local script:
 
 ```
 /plugin marketplace add nkcoder/dstack
@@ -21,27 +21,9 @@ There is no application to build or run; the "product" is Markdown skill/agent d
 
 ## Validating changes to skills/agents
 
-No test suite for the Markdown content; validation is structural, via scripts under `plugins/dan-coding/skills/dan-mode/scripts/`:
+There is no automated lint or test suite for the Markdown content — the prior `check-skills.mjs`/`check-plan.mjs` scripts and the `orch`/`watch-pr` Bun toolchain under `plugins/dan-coding/skills/dan-mode/scripts/` were removed as part of the September 2026 simplification down to the four-skill loop below. Don't recreate that tooling unless the user asks for it back.
 
-```bash
-node plugins/dan-coding/skills/dan-mode/scripts/check-skills.mjs        # lint all skills/agents in dan-coding
-node plugins/dan-coding/skills/dan-mode/scripts/check-plan.mjs <plan.md>  # validate a dan-mode multi-phase plan file
-```
-
-`check-skills.mjs` resolves its own plugin root relative to its own path (three levels up from the script), so it always lints whichever `plugins/<name>/{skills,agents}` it lives under — it does not need to be pointed at the repo root. It checks that every skill has valid frontmatter (`name` matching its directory, non-empty `description`), and that every in-prose reference to another **bold-skill-name**, a `/slash-command`, or a `subagent_type` resolves to something real (or an explicit allowlist entry in the script for deliberately-external skills/commands). Run it after adding, renaming, or moving any skill/agent, or after editing cross-references between them, and fix every line it prints.
-
-### The `dan-mode` TypeScript tooling
-
-`plugins/dan-coding/skills/dan-mode/scripts/orch/` and `.../scripts/watch-pr/` are Bun/TypeScript projects with their own tests, run via the sibling `package.json`:
-
-```bash
-cd plugins/dan-coding/skills/dan-mode/scripts
-bun install
-bun run test         # bun test orch watch-pr
-bun run typecheck    # tsc --noEmit --strict for both projects
-```
-
-Single test file: `bun test orch/orch.test.ts` or `bun test watch-pr/cli.test.ts` from that `scripts/` directory.
+Validate by hand instead: confirm each `SKILL.md`'s frontmatter (`name` matching its directory, non-empty `description`) is correct, and that every in-prose reference to a **bold-skill-name**, `/slash-command`, or `subagent_type` resolves to something that actually exists in this repo, or is a Claude Code built-in (`code-review`, `security-review`, `simplify`, `loop`, `run`, `skill-creator`, ...).
 
 ## Architecture
 
@@ -51,22 +33,23 @@ Single test file: `bun test orch/orch.test.ts` or `bun test watch-pr/cli.test.ts
 
 ### Skills (`plugins/<plugin>/skills/*/SKILL.md`)
 
-Each skill is a directory with a `SKILL.md` (YAML frontmatter: `name`, `description`, optionally `disable-model-invocation: true` to make it callable only by explicit `/name` and never auto-triggered) plus optional `references/`, `scripts/`, or `playbooks/` subdirectories. `description` is load-bearing: it's what a future Claude session matches against to decide whether to load the skill, so it must state concretely when to use it, not just what it is.
+Each skill is a directory with a `SKILL.md` (YAML frontmatter: `name`, `description`, optionally `disable-model-invocation: true` to make it callable only by explicit `/name` and never auto-triggered) plus optional `references/` subdirectories. `description` is load-bearing: it's what a future Claude session matches against to decide whether to load the skill, so it must state concretely when to use it, not just what it is.
 
-Within `dan-coding`, skills fall into a few families:
+`dan-coding` has four skills, forming one loop:
 
-- **`dan-mode`** is the umbrella "agent style" skill (`skills/dan-mode/SKILL.md`) — the routing table `dan-agent` reads before doing any work. It maps triggers (an architecture decision, a contested design, "before commit", a PR-status request, ...) to other skills, and indexes every `principle-*` skill under short thematic headings (Core, Architecture, Verification, Delegation, Meta). Its step-by-step procedures live in `skills/dan-mode/playbooks/*.md` — one file per task shape (feature, bug-fix, refactoring, hillclimb, shipping, orchestrate, ...). dan-mode's reply-writing rules delegate to the `unslop` skill.
-- **`principle-*` skills** are single-concept leaves (e.g. `principle-fix-root-causes`, `principle-boundary-discipline`). They're referenced by name from `dan-mode` and elsewhere rather than duplicated; read the leaf skill in full before applying the principle it names.
-- **Routed workflow skills** (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`) spawn one or more subagents on specific models for a specific shape of work (parallel design exploration, adversarial review, N-way races, etc.).
-- **`setup-dstack`** writes `~/.claude/rules/dstack-models.md`, a per-role model register the routed workflow skills and dan-mode playbooks read to decide which model each spawned subagent runs on. Nothing loads this file automatically — each reader opens it by an exact role label and falls back to its own hardcoded default if the label is absent, so the label spelling in `setup-dstack`'s SKILL.md and in the reading skill must match exactly. A role that exists in a skill but isn't in that table is a bug in `setup-dstack`, fixed in the same PR that needs it.
-- Everything else (`unslop`, `technical-writing`, `no-comments`, `tdd`, `recall`, `show-me-your-work`, etc.) is standalone.
+- **`dan-mode`** (`disable-model-invocation: true`, reachable only via `/dan-mode` or the `dan-agent` agent) is the umbrella skill. Its `SKILL.md` states the loop — `Implementation => Verification => Review` — and, for each phase, spawns a fresh subagent on a specific model to run the corresponding skill below. It does no work itself; it only dispatches.
+- **`implementation`** does the actual coding work (feature, bugfix, refactor, optimization, ...). Its `references/` hold `programming-principles.md` plus per-language best-practices files (`typescript-best-practices.md`, `python-best-practices.md`), loaded when the task matches that language.
+- **`verification`** checks the implementation against the goal (unit/integration/throw-away e2e tests), invoked once implementation finishes.
+- **`review`** runs before asking the user to look at the work (pre-commit/push). It delegates to Claude Code's own `/code-review`, `/security-review`, and `/simplify`, classifies findings by severity (critical/high/medium/low), and applies the unslop and comment-cleanup passes from its `references/`.
+
+Findings at critical/high/medium severity from `review` send the loop back to `implementation`; `low` findings don't block.
 
 `dan-financial` currently has one skill, `investment-buffett`, and no `dan-mode`-style routing layer.
 
 ### Agents (`plugins/<plugin>/agents/*.md`)
 
-Standalone subagent definitions, same frontmatter shape as skills (`name`, `description`, optionally `is_background: true`). `dan-agent.md` is the routing target for `/dan-mode`: a thin pointer telling the subagent to read `dan-mode`'s `SKILL.md` in full (including the Principles index) before acting — substituting a generic subagent type for it causes drift because the routing logic lives entirely in that SKILL.md, not in the agent file.
+Standalone subagent definitions, same frontmatter shape as skills (`name`, `description`, optionally `is_background: true`). `dan-agent.md` is the routing target for `/dan-mode`: a thin pointer telling the subagent to read `dan-mode`'s `SKILL.md` in full before acting and run its loop — substituting a generic subagent type for it causes drift because the routing logic lives entirely in that `SKILL.md`, not in the agent file.
 
 ### Cross-referencing convention
 
-Skill/agent prose refers to other skills as **bold-skill-name** (matching the skill's `name:` frontmatter) and to slash commands as `/command`. `check-skills.mjs` validates these, so keep new skill names and their prose mentions consistent, and update the script's allowlist in the same PR when intentionally referencing something outside the plugin (e.g. `loop`, `run`, `security-review`, `simplify`, `skill-creator`, which ship with Claude Code itself).
+Skill prose refers to other skills as **bold-skill-name** (matching the skill's `name:` frontmatter) and to slash commands as `/command`. There's no automated checker for this anymore (see "Validating changes" above), so double-check by hand when adding or renaming a skill, or when referencing something outside `dan-coding` (e.g. Claude Code's own `code-review`, `security-review`, `simplify`, which ship with Claude Code itself).
