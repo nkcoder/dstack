@@ -12,12 +12,13 @@ Prove the change does what was asked, by checking the real thing. "It compiles" 
 
 1. **Restate what done looks like.** Take the goal from implementation and list the behaviors that must be true, including the edge cases that matter.
 2. **Run the checks CI runs.** Read the CI config (`.github/workflows/`, `.gitlab-ci.yml`, or similar) and use the same typecheck, lint, test, and build commands, so the pull request doesn't fail after Dan pushes. If there's no CI, find the commands in `package.json`, `Makefile`, `pyproject.toml`, the README, or `CLAUDE.md`. While iterating, run only the tests near the code you changed.
-3. **For a bug, show it failing first.** Write a test that reproduces the bug. Run it before the fix and confirm it fails for the right reason. Then confirm it passes after the fix. If a test would be expensive or brittle, use the closest cheap check instead, like a script or a command that reproduces it. Say why you skipped the test.
-4. **For new or changed behavior, add tests at the cheapest level that proves it.** Pure logic gets unit tests. Code that talks to a database or another service gets integration tests against the real thing, like a test database of the same engine as production. Keep end-to-end tests for the few main user flows. Cover the behaviors from step 1, and follow the rules in the next section.
-5. **Exercise the real path once.** Run the thing the way a user would. Call the endpoint, run the CLI command, load the page, or run the script on real input. For a UI or an app, use the **run** skill or drive a browser. Put throwaway end-to-end scripts in the scratchpad, and delete them after unless they're worth keeping as tests.
-6. **Follow the data all the way through.** Check the output, the saved file, the database row, or the log line, not just the exit code.
-7. **Run the area checks.** When the change touches UI, an endpoint, or the database, run the "Verify" section of `frontend.md`, `api.md`, or `database.md` in `../implementation/references/`. Inside the dan-mode loop those files are already loaded from implementation. Skip the ones the change doesn't touch.
-8. **Run the full set of CI checks once** before handing off to review.
+3. **For a bug, show it failing first.** Implementation should already have a test that failed before the fix. Confirm it passes now. If there isn't one, stash the fix (`git stash`), write the test, run it and confirm it fails for the right reason, then restore the fix and confirm it passes. If a test would be expensive or brittle, use the closest cheap check instead, like a script or a command that reproduces it. Say why you skipped the test.
+4. **For new or changed behavior, add tests at the cheapest level that proves it.** Test the function production actually runs, not a sibling, a test-only wrapper, or a fake of it. When you fake a dependency, the dependency needs its own test against the real thing. Pure logic gets unit tests. Code that talks to a database or another service gets integration tests against the real thing, like a test database of the same engine as production. Keep end-to-end tests for the few main user flows. Cover the behaviors from step 1, and follow the rules in the next section.
+5. **Break the code to check each new test.** Temporarily break or revert the line each new test is meant to guard, run that test, and confirm it fails. Then restore the code. A test that still passes proves nothing, even when its name says it does. Check that it reaches the case it names, like a second batch, a retry, or a cancel.
+6. **Exercise the real path once.** Run the thing the way a user would. Call the endpoint, run the CLI command, load the page, or run the script on real input. For a UI or an app, use the **run** skill or drive a browser. Put throwaway end-to-end scripts in the scratchpad, and delete them after unless they're worth keeping as tests.
+7. **Follow the data all the way through.** Check the output, the saved file, the database row, or the log line, not just the exit code.
+8. **Run the area checks.** When the change touches UI, an endpoint, or the database, run the "Verify" section of `frontend.md`, `api.md`, or `database.md` in `../implementation/references/`. Inside the dan-mode loop those files are already loaded from implementation. Skip the ones the change doesn't touch.
+9. **Run the full set of CI checks once** before handing off to review.
 
 ## Test behavior, not implementation
 
@@ -54,4 +55,7 @@ Treat it as a bug and find the root cause. Go back to implementation and fix it 
 
 - The commands you ran and what they showed.
 - For a bug, the failing-before and passing-after evidence.
+- For each new test, the line you broke and the failure you saw.
 - Anything you could not verify, and why. Don't claim what you didn't check.
+
+Inside dan-mode, this report is the gate evidence you pass to review.

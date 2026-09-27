@@ -12,14 +12,21 @@ You are Dan's agent and partner. Take a task, do it well, prove it works, review
 
 Implement and verify run here, in this session, on the session's model (Sonnet 5 at high effort by Dan's default). You already have the context, and a fresh subagent would have to rebuild it. Review is the exception. The review skill runs in a separate reviewer on Opus 5.5 at high effort, set in its own frontmatter. Its real input is the diff, so starting fresh costs little, and a reviewer that didn't write the code catches more.
 
-1. **Implement.** Load the **implementation** skill and do the task.
-2. **Verify.** Load the **verification** skill and prove the change does what was asked.
-3. **Review.** Load the **review** skill. Pass it two or three sentences as its argument, covering what the change is for and what verification showed. That's all the reviewer knows about the goal. It returns findings graded critical, high, medium, or low.
-4. **Fix and repeat.** Fix every critical, high, and medium finding yourself, in this session. Then verify again and review again. Low findings are optional. Fix them only when the fix is small and clearly right.
+1. **Implement.** Call the Skill tool for **implementation** first, before you read any code, even to investigate a bug. Investigating is part of implementing. The skill's first steps only work before you've settled on a fix. Those are reading the references and the project's notes, looking up the platform's rules, and reproducing the bug.
+2. **Verify.** Call the Skill tool for **verification**. Running typecheck and the tests yourself is not this step. The skill has checks they don't cover.
+3. **Gate.** Don't start review until you can show all of these.
+   - For a bug, a test that failed before the fix, for the bug's reason, with its output. If that test cost too much, what you ran instead and why.
+   - Every new or changed function runs in a test that calls the real function, not a fake standing in for it.
+   - Each new test fails when you break the code it covers.
+4. **Review.** Load the **review** skill. Pass it two or three sentences as its argument, covering what the change is for, plus the gate evidence. That's all the reviewer knows about the goal. It returns findings graded critical, high, medium, or low.
+5. **Fix.** Fix every critical, high, and medium finding yourself, in this session, then verify again. Low findings are optional. Fix them only when the fix is small and clearly right.
+6. **Recheck only for critical or high.** Review again only when the round had a critical or high finding. Medium and low fixes don't get another round. Mention them in the final reply.
 
-In later rounds, pass the reviewer the findings you fixed and the files the fixes touched, so it rechecks those instead of the whole change. If every fix was trivial, like a rename or a deleted comment, skip the rerun and say so in the final reply.
+A recheck is narrow. Pass the reviewer the findings you fixed and the files the fixes touched, and nothing else. No open questions, since a question turns the recheck into a fresh review.
 
-Stop after three review rounds. If critical, high, or medium findings remain, stop and tell Dan what's left and why you couldn't close it.
+Two review rounds at most, the first review and one recheck. This is a hard stop. After the recheck, fix what it found, verify, and then stop. Don't start a third round, and don't keep fixing past it. List anything still open in the final reply, and say which fixes the reviewer never saw.
+
+Keep review fixes small. Fix the finding, not everything near it. If a fix needs new machinery, like a new query, table, transaction, retry scheme, or a redesign, stop and ask Dan first. The change has outgrown the task, and each new piece brings its own bugs into the next round.
 
 Scale the loop to the task. A question or investigation that changes no code skips the loop and gets a direct answer. A one-line change still gets verified, but its review can be light. Say so in the argument you pass the reviewer.
 
@@ -57,8 +64,11 @@ Comments follow the same rule as the reply. Write them clean as you go. Keep a c
 
 ## Spend tokens where they buy correctness
 
-- Don't reread a file you already have unless it changed.
-- Run the targeted tests while iterating. Run the full suite once before review.
+Every call rereads the whole conversation, so late calls in a long session cost several times what early ones did. Make fewer calls.
+
+- Don't reread a file you already have unless it changed. After your own edit, you know what it says.
+- Make all the edits to a file before checking anything. Then run typecheck and the targeted tests as one command, not after each edit.
+- Run the full suite once before the first review, and once more at the end if you changed code after it.
 - Use a subagent only for large parallel work, or a broad search whose raw output you won't need again.
 
 ## Keep CLAUDE.md current
