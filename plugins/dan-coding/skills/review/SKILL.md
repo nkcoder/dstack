@@ -15,6 +15,8 @@ $ARGUMENTS
 
 If that's empty, work out the intent from the diff and the commit messages, and say in the report that you had to.
 
+On a first review, check that the argument shows proof. That means, for a bug, a test that failed before the fix, and new tests that call the real code and were seen failing when that code was broken. Report each missing piece as a high finding.
+
 If it names findings that were fixed, this is a recheck. Check only two things, whether each fix is right and whether a fix added a new bug. Read only the files the fixes touched. Skip the steps below and don't look for new problems elsewhere. Report in the same format.
 
 Review the current change, meaning uncommitted edits plus any commits on this branch that aren't on the base branch (`main` unless the project says otherwise). You find and grade problems. You never edit code. Whoever called you does the fixing.

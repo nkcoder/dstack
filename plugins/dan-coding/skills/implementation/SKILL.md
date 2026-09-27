@@ -8,19 +8,28 @@ user-invocable: false
 
 Make the change correct first, then simple, then fast enough. Fast enough means measured, not guessed.
 
+## First, before reading any code
+
+Read these now, before you look at the code or form a plan. Once you have a fix in mind, they only confirm it.
+
+- `references/programming-principles.md`, always.
+- `references/typescript-best-practices.md` for TypeScript (`*.ts`, `*.tsx`), or `references/python-best-practices.md` for Python (`*.py`).
+- The project's own notes for the area you're about to touch, like the gotchas file, ADRs, or runbooks that CLAUDE.md points to. A trap in this area is often already written down.
+
 ## Before you write code
 
 1. **Know the goal.** Restate what done looks like as something you can check. "Add validation" becomes "invalid input X is rejected with error Y, valid input still works."
 2. **Read the code you'll touch**, plus its callers and its tests. Match how the project already does things, including its style, libraries, error handling, and test layout.
 3. **Name the data shape first.** Decide what the core types and structures are before writing logic, using the domain's own words. A good shape removes branches later. See "Model the domain" in the principles.
 4. **Decide where the side effects go.** Keep the logic in pure functions and push I/O to the edges. See "Prefer a functional style" in the principles.
-5. **Ask what can run twice or stop halfway.** Retries, replays, timeouts, concurrent runs, and a crash between two writes. Decide how the design handles each before writing it. These are the bugs review most often sends back.
+5. **Ask what can run twice or stop halfway.** Retries, replays, timeouts, concurrent runs, and a crash between two writes. Decide how the design handles each before writing it. These are the bugs review most often sends back. When the code runs under a platform with its own rules, look those rules up in its docs or type files instead of working from memory. That covers retry and replay rules, time limits, step or payload limits, and transaction behavior, in things like job queues, durable workflows, and serverless routes.
 6. **Pick the smallest change that fully solves it.** If there's a simpler approach than the one asked for, say so.
 7. **If the task is about architecture, read `references/architecture.md` first.** That means it adds a service, module, or datastore, changes how components talk to each other, picks a technology that's hard to swap, changes a public API, event, or schema, or has explicit scale, reliability, or security goals. Skip it for everything else.
 
 ## Bugs, find the root cause
 
-- Reproduce the bug first. If you can't reproduce it, you can't prove you fixed it.
+- Reproduce the bug before changing any code. Write a test that fails for the bug's reason, run it, and keep the output. If you can't reproduce it, you can't prove you fixed it.
+- When the bug lives in infrastructure, like a timeout, a retry, or a job runner, build the smallest harness that drives the real entry point. An example is a fake step object for a background job function. That harness becomes the test. If even that costs too much, run the closest cheap check and say why.
 - Keep asking why until you reach the cause. Fix it there.
 - Don't add a guard that hides the symptom. A null check that stops a crash without explaining why the value was null is a symptom fix.
 - Look for the same mistake elsewhere and fix every instance.
@@ -41,9 +50,7 @@ Measure before and after, on the same input. Keep a change only if the numbers s
 
 ## While you write
 
-- Follow `references/programming-principles.md`. Read it at the start of any coding task.
-- For TypeScript (`*.ts`, `*.tsx`), also follow `references/typescript-best-practices.md`.
-- For Python (`*.py`), also follow `references/python-best-practices.md`.
+- Follow the principles and language files you read at the start.
 - When the task touches UI code (components, pages, styles, client state), also follow `references/frontend.md`.
 - When the task adds or changes an endpoint, or client code that calls one, also follow `references/api.md`.
 - When the task touches queries, schema, migrations, or transactions, also follow `references/database.md`.
@@ -55,3 +62,5 @@ Measure before and after, on the same input. Keep a change only if the numbers s
 ## Done when
 
 The change does what the goal says, and you know exactly how you'll prove it in verification. Docs that describe the changed behavior are updated too, like the README, API docs, changelog, and `.env.example`.
+
+Next, load the **verification** skill. Running typecheck and tests on your own doesn't replace it.
