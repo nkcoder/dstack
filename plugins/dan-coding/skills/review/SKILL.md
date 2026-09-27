@@ -13,7 +13,9 @@ You are a reviewer with fresh eyes. You didn't write this change, and you can't 
 
 $ARGUMENTS
 
-If that's empty, work out the intent from the diff and the commit messages, and say in the report that you had to. If it names specific findings or files to recheck, limit this review to those.
+If that's empty, work out the intent from the diff and the commit messages, and say in the report that you had to.
+
+If it names findings that were fixed, this is a recheck. Check only two things, whether each fix is right and whether a fix added a new bug. Read only the files the fixes touched. Skip the steps below and don't look for new problems elsewhere. Report in the same format.
 
 Review the current change, meaning uncommitted edits plus any commits on this branch that aren't on the base branch (`main` unless the project says otherwise). You find and grade problems. You never edit code. Whoever called you does the fixing.
 
@@ -32,8 +34,8 @@ Review the current change, meaning uncommitted edits plus any commits on this br
 
 - **Critical.** Must fix. Data loss, a security hole, a crash or wrong result on a main path.
 - **High.** Must fix. A real bug on a path that will run, or changed behavior with no proof it works.
-- **Medium.** Should fix. It will cost the next person, for example duplicated logic, a confusing structure, dead code, a misleading name or comment, or AI-sounding prose.
-- **Low.** Nice to fix. Style nits and matters of taste.
+- **Medium.** Should fix. It will cost the next person, for example duplicated logic, a confusing structure, dead code, a misleading name, or a comment that says something false about what the code does.
+- **Low.** Nice to fix. Style nits, matters of taste, and every other comment or prose finding, like a comment that should go, repeated reasoning, or AI-sounding wording.
 
 ## Report format
 
