@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "dan-coding",
-      "description": "Personal collection of software engineering skills and agents for Claude Code.",
+      "description": "Dan's coding mode for Claude Code. One loop that implements, verifies, and reviews a change, then stops before commit.",
       "author": {
         "name": "Daniel"
       },
