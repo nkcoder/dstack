@@ -20,7 +20,7 @@ This repo is a Claude Code plugin marketplace (`dstack`) with two plugins: `dan-
 
 ## dan-coding
 
-[`plugins/dan-coding/`](plugins/dan-coding/) is a coding mode built on one loop. It asks only the questions that need you, implements and verifies the change, has a separate reviewer check it, fixes what matters, and stops before commit. Start it with `/dan-mode`.
+[`plugins/dan-coding/`](plugins/dan-coding/) is a coding mode built on one loop. It first restates the task with its plan, decisions, questions, and size, and waits for your go. Then it implements and verifies the change, has a separate reviewer check it, fixes what matters, and opens a pull request for you to review. A task over the size limit becomes a stack of pull requests, each built on the one before. Start it with `/dan-mode`.
 
 Implement and verify run on your session's model, and review runs in a separate Opus reviewer at high effort. The intended setup is Sonnet 5.5 at high effort as your default. Set it once with `/model` and `/effort high`, pressing Enter each time to save it. On Bedrock or Google Cloud, use the full model ID, like `/model claude-sonnet-5-5`.
 
@@ -28,7 +28,7 @@ Optional: install `claude-md-management` from the official marketplace. When a s
 
 ### Skills
 
-- [`dan-mode`](plugins/dan-coding/skills/dan-mode/SKILL.md) runs the whole loop in the current session and stops before commit. Its two references are the mandatory rules, [`principles.md`](plugins/dan-coding/skills/dan-mode/references/principles.md) for code and [`unslop.md`](plugins/dan-coding/skills/dan-mode/references/unslop.md) for prose. Both list only what the model wouldn't do by default.
+- [`dan-mode`](plugins/dan-coding/skills/dan-mode/SKILL.md) runs the whole loop in the current session and opens the pull request. Its two references are the mandatory rules, [`principles.md`](plugins/dan-coding/skills/dan-mode/references/principles.md) for code and [`unslop.md`](plugins/dan-coding/skills/dan-mode/references/unslop.md) for prose. Both list only what the model wouldn't do by default.
 - [`review`](plugins/dan-coding/skills/review/SKILL.md) runs `/code-review`, runs `/security-review` when the diff touches a trust boundary, checks the test evidence and both rules files, and grades each finding.
 
 ## dan-financial

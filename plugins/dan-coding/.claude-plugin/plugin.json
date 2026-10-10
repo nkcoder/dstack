@@ -1,6 +1,6 @@
 {
   "name": "dan-coding",
-  "description": "Dan's coding mode for Claude Code. One loop that implements, verifies, and reviews a change, then stops before commit.",
+  "description": "Dan's coding mode for Claude Code. One loop that agrees on the task, then implements, verifies, and reviews the change and opens a pull request.",
   "author": {
     "name": "Daniel"
   }

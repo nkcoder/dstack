@@ -4,7 +4,7 @@ Every change follows these. You write to them, and the reviewer checks against t
 
 ## Scope
 
-- A pull request stays under about 400 changed lines, not counting tests, lockfiles, and generated code. When a task will go over, plan the split before starting.
+- A pull request stays under about 600 changed lines, not counting tests, docs, lockfiles, generated code, or migration snapshots. The migration SQL itself counts. When a task will go over, split it into pull requests that each leave the app working, each built on the one before.
 - Every changed line traces to the task. Mention unrelated problems instead of fixing them.
 - Keep a refactor and a behavior change in separate steps.
 
