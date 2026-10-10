@@ -15,7 +15,7 @@ $ARGUMENTS
 
 If that's empty, work out the intent from the diff and the commit messages, and say in the report that you had to.
 
-The change is the uncommitted edits plus any commits on this branch that aren't on the base branch (`main` unless the project says otherwise). You find and grade problems. You never edit code.
+The change is the uncommitted edits plus any commits on this branch that aren't on the base branch. The base branch is `main` unless the argument or the project names another. You find and grade problems. You never edit code.
 
 If the argument names findings that were fixed, this is a recheck. Read only the files the fixes touched, and check only whether each fix is right and whether it added a bug. Skip the steps below and report in the same format.
 
